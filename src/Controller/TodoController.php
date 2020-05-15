@@ -36,7 +36,7 @@ class TodoController extends AbstractController
     }
 
     /**
-     * @Route("/add/{title<\d{1-4}>}/{content?me reposer}", name="todo.add")
+     * @Route("/add/{title}/{content?me reposer}", name="todo.add")
      */
     public function addUpdateTodo(Request $request, $title, $content) {
         $session = $request->getSession();

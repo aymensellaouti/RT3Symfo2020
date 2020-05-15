@@ -15,9 +15,8 @@ class FirstController extends AbstractController
      */
     public function index(Request $request)
     {
-        return $this->render('first/index.html.twig', [
-            'controller_name' => 'FirstController',
-        ]);
+        dd($request);
+        return new Response('cc');
     }
     /**
      * @Route("/second", name="second")

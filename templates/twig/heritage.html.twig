@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body2 %}
+    <a href="{{ path('color') }}">Color</a>
+    {{include('twig/fb.html.twig')}}
+    {{ render(controller('App\\Controller\\TwigController::index', { 'nb' : 5 })) }}
+
+    {% endblock %}
+{% block body %}
+    <h1>Je suis la page héritage</h1>
+    {{ parent() }}
+{% endblock %}
+{% block title %}
+    Heritage
+{% endblock %}
+
+

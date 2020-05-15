@@ -1,0 +1,19 @@
+<p>Test area {{ area(10,20) }}</p>
+<p> {{ randomName() }}</p>
+<table border="2">
+    <tr>
+        <th>Number</th>
+    </tr>
+    {% for number in tableau %}
+        <tr>
+            <td>
+                {{ number }}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+<p>Nombre de valeurs : {{ tableau|length }}</p>
+<p>Min : {{ min(tableau) }}</p>
+<p>Max : {{ max(tableau) }}</p>
+

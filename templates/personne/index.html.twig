@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des personnes{% endblock %}
+
+{% block body %}
+    <table class="table table-hover">
+        <thead>
+            <th>id</th>
+            <th>Firstname</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Cin</th>
+            <th>Path</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+        {% for personne in personnes %}
+         <tr>
+             <td>{{ personne.id }}</td>
+             <td>{{ personne.firstname }}</td>
+             <td>{{ personne.name }}</td>
+             <td>{{ personne.age }}</td>
+             <td>{{ personne.cin }}</td>
+             <td>{{ personne.path }}</td>
+             <td><a href="{{ path('personne.delete', {'id': personne.id}) }}">
+                     Delete
+                 </a></td>
+         </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% for p in 1..nbPage %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path('personne', {'page': p}) }}">{{ p }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endblock %}
