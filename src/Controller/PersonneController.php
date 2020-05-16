@@ -6,8 +6,10 @@ use App\Entity\Classe;
 use App\Entity\Cours;
 use App\Entity\Personne;
 use App\Entity\SocialMedia;
+use App\Form\PersonneType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -68,9 +70,9 @@ class PersonneController extends AbstractController
     }
 
     /**
-     * @Route("/add", name="personne.add")
+     * @Route("/addFake", name="personne.fake.add")
      */
-    function addPersonne(EntityManagerInterface $manager) {
+    function addFakePersonne(EntityManagerInterface $manager) {
         $personne = new Personne();
         $personne->setAge('30');
         $personne->setPath('path');
@@ -102,5 +104,39 @@ class PersonneController extends AbstractController
 
         return $this->forward('App\\Controller\\PersonneController::index');
 
+    }
+
+    /**
+     * @Route("/add/{id?0}", name="personne.add")
+     */
+    public function addPersonne(Request $request, Personne $personne=null, EntityManagerInterface $manager) {
+        if (! $personne) {
+            $personne = new Personne();
+        }
+        $form = $this->createForm(PersonneType::class, $personne);
+        $form->remove('socialMedia');
+        $form->remove('path');
+        //$formView = $form->createView();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $image = $form['image']->getData();
+            $imgPath = md5(uniqid()).$image->getClientOriginalName();
+
+            $destination = __DIR__.'\..\..\public\assets\uploads';
+            $personne->setPath("assets\uploads\$imgPath");
+            try {
+                $image->move($destination, $imgPath);
+            } catch (FileException $e) {
+                dd($e);
+            }
+            $manager->persist($personne);
+            $manager->flush();
+            return $this->redirectToRoute('personne');
+            // Ajouter cette personne dans la base de données
+        }
+        return $this->render('personne/add.html.twig', array(
+            'form' => $form->createView()
+        ));
     }
 }

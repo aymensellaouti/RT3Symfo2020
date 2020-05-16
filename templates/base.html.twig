@@ -109,7 +109,7 @@
                         {% endblock %}
                     </li>
                 </ol>
-                <div class="row">
+                <div>
                     {% for message in app.session.flashbag.get('welcome') %}
                         <div class="alert alert-info">
                             {{ message }}
@@ -129,7 +129,6 @@
                         Contenu initial
                     {% endblock %}
                 </div>
-
             </div>
         </main>
         <footer class="py-4 bg-light mt-auto">
