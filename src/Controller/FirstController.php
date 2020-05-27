@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Form\StudentsLoaderType;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,5 +44,30 @@ class FirstController extends AbstractController
             'esm' => $firstname,
             'la9ab' => $name
         ]);
+    }
+
+    /**
+     * @Route("", name="xlsx")
+     */
+    public function xlsx(Request $request) {
+        $form = $this->createForm(StudentsLoaderType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form['file']->getData();
+            dump($form['section']->getData());
+            $fileFolder = __DIR__.'/../../public/files/';
+            $filePathName = md5(uniqid()).$file->getClientOriginalName();
+            try {
+                $file->move($fileFolder, $filePathName);
+            } catch (FileException $e) {
+                dd($e);
+            }
+            $spreadsheet = IOFactory::load($fileFolder.$filePathName);
+            $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+            dd($sheetData);
+        }
+        return $this->render('personne/load.html.twig', array(
+            'form' => $form->createView()
+        ) );
     }
 }
